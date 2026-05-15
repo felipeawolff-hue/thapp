@@ -8,210 +8,157 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --gold: #C9A84C; --gold-light: #E8C96A; --gold-dark: #8B6914;
-  --cream: #FAF7F0; --cream-dark: #EDE5D0;
-  --white: #FFFFFF;
-  --stone: #3D3528; --stone-light: #6B5E4A; --stone-muted: #9C8E7A;
-  --green: #2E5D3A; --green-light: #4A8A5A;
-  --red: #8B2A2A; --blue: #1A4A8B; --pink: #8B2A5A;
-  --shadow: 0 2px 16px rgba(61,53,40,0.10);
-  --radius: 14px; --radius-sm: 9px;
+  --gold:#C9A84C;--gold-light:#E8C96A;--gold-dark:#8B6914;
+  --cream:#FAF7F0;--cream-dark:#EDE5D0;--white:#FFFFFF;
+  --stone:#3D3528;--stone-light:#6B5E4A;--stone-muted:#9C8E7A;
+  --green:#2E5D3A;--green-light:#4A8A5A;
+  --red:#8B2A2A;--blue:#1A4A8B;--pink:#8B2A5A;
+  --shadow:0 2px 16px rgba(61,53,40,0.10);
+  --radius:14px;--radius-sm:9px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--stone); min-height: 100vh; font-size: 15px; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--stone);min-height:100vh;font-size:15px;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
+.hero{background:linear-gradient(160deg,var(--stone) 0%,#5a4a30 100%);padding:36px 20px 30px;text-align:center;}
+.hero h1{font-family:'Cinzel',serif;color:var(--gold);font-size:22px;letter-spacing:2px;margin-bottom:6px;}
+.hero p{color:rgba(255,255,255,0.55);font-size:13px;}
+.hero-back{display:flex;align-items:center;gap:8px;margin-bottom:20px;cursor:pointer;color:rgba(255,255,255,0.5);font-size:13px;}
+.hero-back:hover{color:var(--gold);}
+.wrap{padding:20px 16px;max-width:520px;margin:0 auto;}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--cream-dark);padding:22px 20px;margin-bottom:16px;}
+.card-title{font-family:'Cinzel',serif;font-size:15px;color:var(--stone);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--cream-dark);letter-spacing:1px;}
+.card-title span{color:var(--gold);}
+.fg{margin-bottom:14px;}
+label{display:block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--stone-light);margin-bottom:6px;}
+.opt-label{font-size:11px;color:var(--stone-muted);font-weight:400;letter-spacing:0;text-transform:none;}
+input,select{width:100%;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);padding:13px 14px;font-family:'Lato',sans-serif;font-size:15px;color:var(--stone);background:var(--cream);transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none;appearance:none;}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.15);background:var(--white);}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239C8E7A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;transition:all .2s;text-align:center;}
+.btn-gold{background:var(--gold);color:var(--stone);}
+.btn-gold:active{background:var(--gold-light);}
+.btn-stone{background:var(--stone);color:var(--gold);margin-top:10px;}
+.btn-green{background:linear-gradient(135deg,var(--green) 0%,var(--green-light) 100%);color:white;box-shadow:0 4px 20px rgba(46,93,58,0.3);font-size:15px;padding:18px;border-radius:var(--radius);text-decoration:none;display:block;text-align:center;margin-top:16px;}
+.btn-green .sub{font-size:12px;font-weight:400;opacity:.8;margin-top:4px;}
+.btn-sm{padding:6px 13px;border:none;border-radius:6px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;font-size:11px;letter-spacing:.8px;text-transform:uppercase;transition:all .2s;}
+.btn-dark{background:var(--stone);color:var(--gold);}
+.btn-red{background:rgba(139,42,42,0.12);color:var(--red);}
+.btn-outline{background:none;border:1.5px solid var(--cream-dark);color:var(--stone-muted);padding:7px 13px;border-radius:6px;cursor:pointer;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;transition:all .2s;}
+.btn-outline:hover{border-color:var(--gold);color:var(--stone);}
+.sud-toggle{display:flex;border-radius:12px;overflow:hidden;border:1.5px solid var(--cream-dark);margin-top:4px;}
+.sud-btn{flex:1;padding:20px 12px;border:none;cursor:pointer;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;transition:all .25s;background:var(--cream);color:var(--stone-muted);display:flex;flex-direction:column;align-items:center;gap:6px;}
+.sud-btn .sub{font-size:11px;font-weight:400;opacity:.7;text-align:center;line-height:1.4;}
+.sud-btn.sim{background:var(--green);color:white;}
+.sud-btn.sim .sub{opacity:.85;color:rgba(255,255,255,.8);}
+.sud-btn.nao{background:var(--stone);color:var(--gold);}
+.sud-btn.nao .sub{opacity:1;color:rgba(201,168,76,.75);}
+.toggle2{display:flex;gap:10px;}
+.toggle2-btn{flex:1;padding:14px 10px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);cursor:pointer;background:var(--cream);font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:var(--stone-muted);transition:all .2s;text-align:center;}
+.toggle2-btn.am{background:rgba(26,74,139,0.1);border-color:var(--blue);color:var(--blue);}
+.toggle2-btn.af{background:rgba(139,42,90,0.1);border-color:var(--pink);color:var(--pink);}
+.ord-list{display:flex;flex-direction:column;gap:8px;}
+.ord-btn{padding:14px 16px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);cursor:pointer;background:var(--cream);font-family:'Lato',sans-serif;font-size:14px;color:var(--stone-muted);transition:all .2s;text-align:left;display:flex;align-items:center;gap:10px;}
+.ord-dot{width:10px;height:10px;border-radius:50%;background:var(--cream-dark);flex-shrink:0;transition:background .2s;}
+.ord-btn.active{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--stone);}
+.ord-btn.active .ord-dot{background:var(--gold);}
+.seq-bar{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--cream-dark);margin-bottom:16px;}
+.seq-item{flex:1;padding:7px 2px;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;background:var(--cream);color:var(--stone-muted);border-right:1px solid var(--cream-dark);}
+.seq-item:last-child{border-right:none;}
+.seq-item.done{background:rgba(46,93,58,0.1);color:var(--green);}
+.seq-item.current{background:var(--gold);color:var(--stone);}
+.seq-item.locked{opacity:.3;}
+.res-card{background:var(--cream);border:1.5px solid var(--gold);border-radius:var(--radius);padding:18px;margin-bottom:4px;}
+.res-label{font-size:12px;color:var(--stone-muted);margin-bottom:3px;}
+.res-val{font-size:16px;font-weight:700;color:var(--stone);}
+.sem-box{background:linear-gradient(135deg,var(--stone) 0%,#5a4a30 100%);border-radius:var(--radius);padding:32px 22px;text-align:center;color:white;}
+.sem-box .icon{font-size:48px;margin-bottom:16px;}
+.sem-box h3{font-family:'Cinzel',serif;color:var(--gold);font-size:19px;margin-bottom:12px;letter-spacing:1px;}
+.sem-box p{font-size:14px;line-height:1.7;opacity:.85;}
+.alert{padding:13px 16px;border-radius:9px;font-size:13px;margin-bottom:14px;display:none;line-height:1.5;}
+.alert.show{display:block;}
+.alert-ok{background:rgba(46,93,58,0.1);color:var(--green);border:1px solid rgba(46,93,58,.2);}
+.alert-err{background:rgba(139,42,42,0.1);color:var(--red);border:1px solid rgba(139,42,42,.2);}
+.alert-inf{background:rgba(201,168,76,0.1);color:var(--gold-dark);border:1px solid rgba(201,168,76,.3);}
 
-/* ── TELAS ── */
-.screen { display: none; min-height: 100vh; }
-.screen.active { display: block; }
+/* ── CALENDÁRIO CUSTOMIZADO ── */
+.cal-wrap{position:relative;}
+.cal-input{width:100%;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);padding:13px 14px;font-family:'Lato',sans-serif;font-size:15px;color:var(--stone);background:var(--cream);cursor:pointer;text-align:left;outline:none;}
+.cal-input:focus,.cal-input.open{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.15);background:var(--white);}
+.cal-input.empty{color:var(--stone-muted);}
+.cal-popup{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--white);border:1.5px solid var(--cream-dark);border-radius:var(--radius);box-shadow:0 8px 32px rgba(61,53,40,0.18);z-index:1000;overflow:hidden;}
+.cal-popup.open{display:block;}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--cream-dark);background:var(--cream);}
+.cal-nav{background:none;border:none;cursor:pointer;color:var(--stone-muted);font-size:18px;padding:4px 8px;border-radius:6px;transition:all .2s;}
+.cal-nav:hover{color:var(--stone);background:var(--cream-dark);}
+.cal-month-year{font-family:'Cinzel',serif;font-size:14px;color:var(--stone);letter-spacing:1px;cursor:pointer;padding:4px 10px;border-radius:6px;transition:all .2s;}
+.cal-month-year:hover{background:var(--cream-dark);}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);padding:8px 10px 4px;}
+.cal-weekday{text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--stone-muted);text-transform:uppercase;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);padding:4px 10px 12px;gap:2px;}
+.cal-day{text-align:center;padding:7px 0;font-size:13px;cursor:pointer;border-radius:7px;color:var(--stone);transition:all .15s;}
+.cal-day:hover{background:var(--cream-dark);}
+.cal-day.other-month{color:var(--stone-muted);opacity:.4;}
+.cal-day.today{font-weight:700;color:var(--gold-dark);}
+.cal-day.selected{background:var(--gold);color:var(--stone);font-weight:700;}
+.cal-day.selected:hover{background:var(--gold-light);}
+/* Modo ano/mês */
+.cal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px;}
+.cal-cell{padding:10px 6px;text-align:center;font-size:13px;cursor:pointer;border-radius:8px;color:var(--stone);transition:all .15s;}
+.cal-cell:hover{background:var(--cream-dark);}
+.cal-cell.selected{background:var(--gold);color:var(--stone);font-weight:700;}
+.cal-cell.current{font-weight:700;color:var(--gold-dark);}
 
-/* ── HERO ── */
-.hero {
-  background: linear-gradient(160deg, var(--stone) 0%, #5a4a30 100%);
-  padding: 36px 20px 30px; text-align: center;
-}
-.hero h1 { font-family:'Cinzel',serif; color:var(--gold); font-size:22px; letter-spacing:2px; margin-bottom:6px; }
-.hero p { color:rgba(255,255,255,0.55); font-size:13px; }
-.hero-back { display:flex; align-items:center; gap:8px; margin-bottom:20px; cursor:pointer; color:rgba(255,255,255,0.5); font-size:13px; }
-.hero-back:hover { color:var(--gold); }
-
-/* ── WRAP ── */
-.wrap { padding: 20px 16px; max-width: 520px; margin: 0 auto; }
-
-/* ── CARD ── */
-.card { background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--cream-dark); padding:22px 20px; margin-bottom:16px; }
-.card-title { font-family:'Cinzel',serif; font-size:15px; color:var(--stone); margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--cream-dark); letter-spacing:1px; }
-.card-title span { color:var(--gold); }
-
-/* ── FORM ── */
-.fg { margin-bottom:14px; }
-label { display:block; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--stone-light); margin-bottom:6px; }
-.opt-label { font-size:11px; color:var(--stone-muted); font-weight:400; letter-spacing:0; text-transform:none; }
-input, select { width:100%; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); padding:13px 14px; font-family:'Lato',sans-serif; font-size:15px; color:var(--stone); background:var(--cream); transition:border-color .2s, box-shadow .2s; outline:none; -webkit-appearance:none; appearance:none; }
-input:focus, select:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,0.15); background:var(--white); }
-select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239C8E7A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
-.row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-
-/* ── BOTÕES ── */
-.btn { display:block; width:100%; padding:15px; border:none; border-radius:var(--radius-sm); cursor:pointer; font-family:'Lato',sans-serif; font-weight:700; font-size:14px; letter-spacing:1px; text-transform:uppercase; transition:all .2s; text-align:center; }
-.btn-gold { background:var(--gold); color:var(--stone); }
-.btn-gold:active { background:var(--gold-light); }
-.btn-stone { background:var(--stone); color:var(--gold); margin-top:10px; }
-.btn-green { background:linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%); color:white; box-shadow:0 4px 20px rgba(46,93,58,0.3); font-size:15px; padding:18px; border-radius:var(--radius); text-decoration:none; display:block; text-align:center; margin-top:16px; }
-.btn-green .sub { font-size:12px; font-weight:400; opacity:.8; margin-top:4px; }
-.btn-sm { padding:6px 13px; border:none; border-radius:6px; cursor:pointer; font-family:'Lato',sans-serif; font-weight:700; font-size:11px; letter-spacing:.8px; text-transform:uppercase; transition:all .2s; }
-.btn-dark { background:var(--stone); color:var(--gold); }
-.btn-red { background:rgba(139,42,42,0.12); color:var(--red); }
-.btn-outline { background:none; border:1.5px solid var(--cream-dark); color:var(--stone-muted); padding:7px 13px; border-radius:6px; cursor:pointer; font-family:'Lato',sans-serif; font-size:12px; font-weight:700; transition:all .2s; }
-.btn-outline:hover { border-color:var(--gold); color:var(--stone); }
-
-/* ── SUD TOGGLE ── */
-.sud-toggle { display:flex; border-radius:12px; overflow:hidden; border:1.5px solid var(--cream-dark); margin-top:4px; }
-.sud-btn { flex:1; padding:20px 12px; border:none; cursor:pointer; font-family:'Lato',sans-serif; font-size:15px; font-weight:700; transition:all .25s; background:var(--cream); color:var(--stone-muted); display:flex; flex-direction:column; align-items:center; gap:6px; }
-.sud-btn .sub { font-size:11px; font-weight:400; opacity:.7; text-align:center; line-height:1.4; }
-.sud-btn.sim { background:var(--green); color:white; }
-.sud-btn.sim .sub { opacity:.85; color:rgba(255,255,255,.8); }
-.sud-btn.nao { background:var(--stone); color:var(--gold); }
-.sud-btn.nao .sub { opacity:1; color:rgba(201,168,76,.75); }
-
-/* ── GENERO ── */
-.toggle2 { display:flex; gap:10px; }
-.toggle2-btn { flex:1; padding:14px 10px; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); cursor:pointer; background:var(--cream); font-family:'Lato',sans-serif; font-size:14px; font-weight:700; color:var(--stone-muted); transition:all .2s; text-align:center; }
-.toggle2-btn.am { background:rgba(26,74,139,0.1); border-color:var(--blue); color:var(--blue); }
-.toggle2-btn.af { background:rgba(139,42,90,0.1); border-color:var(--pink); color:var(--pink); }
-
-/* ── ORDENANÇAS ── */
-.ord-list { display:flex; flex-direction:column; gap:8px; }
-.ord-btn { padding:14px 16px; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); cursor:pointer; background:var(--cream); font-family:'Lato',sans-serif; font-size:14px; color:var(--stone-muted); transition:all .2s; text-align:left; display:flex; align-items:center; gap:10px; }
-.ord-dot { width:10px; height:10px; border-radius:50%; background:var(--cream-dark); flex-shrink:0; transition:background .2s; }
-.ord-btn.active { border-color:var(--gold); background:rgba(201,168,76,0.08); color:var(--stone); }
-.ord-btn.active .ord-dot { background:var(--gold); }
-
-/* ── SEQ BAR ── */
-.seq-bar { display:flex; border-radius:8px; overflow:hidden; border:1px solid var(--cream-dark); margin-bottom:16px; }
-.seq-item { flex:1; padding:7px 2px; text-align:center; font-size:9px; font-weight:700; text-transform:uppercase; background:var(--cream); color:var(--stone-muted); border-right:1px solid var(--cream-dark); }
-.seq-item:last-child { border-right:none; }
-.seq-item.done { background:rgba(46,93,58,0.1); color:var(--green); }
-.seq-item.current { background:var(--gold); color:var(--stone); }
-.seq-item.locked { opacity:.3; }
-
-/* ── RESULTADO ── */
-.res-card { background:var(--cream); border:1.5px solid var(--gold); border-radius:var(--radius); padding:18px; margin-bottom:4px; }
-.res-label { font-size:12px; color:var(--stone-muted); margin-bottom:3px; }
-.res-val { font-size:16px; font-weight:700; color:var(--stone); }
-
-/* ── SEM CONTA BOX ── */
-.sem-box { background:linear-gradient(135deg, var(--stone) 0%, #5a4a30 100%); border-radius:var(--radius); padding:32px 22px; text-align:center; color:white; }
-.sem-box .icon { font-size:48px; margin-bottom:16px; }
-.sem-box h3 { font-family:'Cinzel',serif; color:var(--gold); font-size:19px; margin-bottom:12px; letter-spacing:1px; }
-.sem-box p { font-size:14px; line-height:1.7; opacity:.85; }
-
-/* ── ALERTA ── */
-.alert { padding:13px 16px; border-radius:9px; font-size:13px; margin-bottom:14px; display:none; line-height:1.5; }
-.alert.show { display:block; }
-.alert-ok { background:rgba(46,93,58,0.1); color:var(--green); border:1px solid rgba(46,93,58,.2); }
-.alert-err { background:rgba(139,42,42,0.1); color:var(--red); border:1px solid rgba(139,42,42,.2); }
-.alert-inf { background:rgba(201,168,76,0.1); color:var(--gold-dark); border:1px solid rgba(201,168,76,.3); }
-
-/* ── PENDENTES ── */
-.pend-list { display:flex; flex-direction:column; gap:12px; }
-.pend-item { background:var(--white); border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); padding:14px 16px; }
-.pend-item.indexando { border-color:var(--gold); background:rgba(201,168,76,.04); }
-.pend-meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
-.pend-link { font-size:12px; color:var(--stone-muted); word-break:break-all; flex:1; }
-.pend-date { font-size:11px; color:var(--stone-muted); white-space:nowrap; }
-.pend-form { display:none; border-top:1px solid var(--cream-dark); margin-top:12px; padding-top:12px; }
-.pend-form.open { display:block; }
-.pend-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
-.pend-gtoggle { display:flex; border-radius:8px; overflow:hidden; border:1.5px solid var(--cream-dark); }
-.pend-gbtn { flex:1; padding:10px; border:none; cursor:pointer; font-family:'Lato',sans-serif; font-size:13px; font-weight:700; transition:all .2s; background:var(--cream); color:var(--stone-muted); }
-.pend-gbtn.am { background:var(--blue); color:white; }
-.pend-gbtn.af { background:var(--pink); color:white; }
-.pend-chk-grid { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
-.pend-chk-item { display:flex; align-items:center; gap:6px; background:var(--cream); border:1.5px solid var(--cream-dark); border-radius:20px; padding:5px 11px; cursor:pointer; transition:all .2s; user-select:none; }
-.pend-chk-item.on { background:rgba(46,93,58,.08); border-color:var(--green-light); }
-.pend-chk-item .chk-dot { width:8px; height:8px; border-radius:50%; background:var(--cream-dark); transition:background .2s; }
-.pend-chk-item.on .chk-dot { background:var(--green-light); }
-.pend-chk-item span { font-size:12px; font-weight:700; color:var(--stone-light); }
-.pend-chk-item.on span { color:var(--green); }
-
-/* ══════════════════════════════════
-   PAINEL
-══════════════════════════════════ */
-.painel-nav {
-  background:var(--stone); display:flex; align-items:center;
-  justify-content:space-between; padding:0 16px; height:52px;
-  position:sticky; top:0; z-index:100;
-  box-shadow:0 2px 12px rgba(0,0,0,.28);
-}
-.p-logo { font-family:'Cinzel',serif; color:var(--gold); font-size:17px; letter-spacing:2px; }
-.p-tabs { display:flex; gap:2px; }
-.p-tab { background:none; border:none; cursor:pointer; color:var(--stone-muted); padding:8px 12px; border-radius:7px; font-family:'Lato',sans-serif; font-size:12px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; transition:all .2s; }
-.p-tab:hover { color:var(--gold-light); }
-.p-tab.active { background:rgba(201,168,76,.18); color:var(--gold); }
-.p-view { display:none; }
-.p-view.active { display:block; }
-.p-wrap { padding:20px 16px; max-width:960px; margin:0 auto; }
-
-/* Config */
-.cfg-box { background:rgba(201,168,76,.07); border:1.5px dashed var(--gold); border-radius:var(--radius); padding:20px; margin-bottom:20px; }
-.cfg-box p { font-size:13px; color:var(--stone-light); margin-bottom:14px; line-height:1.5; }
-
-/* Genero admin */
-.gtoggle { display:flex; border-radius:8px; overflow:hidden; border:1.5px solid var(--cream-dark); }
-.gtoggle-btn { flex:1; padding:12px; border:none; cursor:pointer; font-family:'Lato',sans-serif; font-size:13px; font-weight:700; transition:all .2s; background:var(--cream); color:var(--stone-muted); }
-.gtoggle-btn.am { background:var(--blue); color:white; }
-.gtoggle-btn.af { background:var(--pink); color:white; }
-
-/* Chk */
-.chk-grid { display:flex; flex-wrap:wrap; gap:8px; }
-.chk-item { display:flex; align-items:center; gap:7px; background:var(--cream); border:1.5px solid var(--cream-dark); border-radius:20px; padding:6px 13px; cursor:pointer; transition:all .2s; user-select:none; }
-.chk-item.on { background:rgba(46,93,58,.08); border-color:var(--green-light); }
-.chk-dot { width:9px; height:9px; border-radius:50%; background:var(--cream-dark); transition:background .2s; }
-.chk-item.on .chk-dot { background:var(--green-light); }
-.chk-item span { font-size:13px; font-weight:700; color:var(--stone-light); }
-.chk-item.on span { color:var(--green); }
-
-/* Table */
-.table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-table { width:100%; border-collapse:collapse; font-size:13px; min-width:560px; }
-thead th { text-align:left; padding:10px 12px; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--stone-muted); border-bottom:2px solid var(--cream-dark); }
-tbody tr { border-bottom:1px solid var(--cream-dark); }
-tbody tr:hover { background:var(--cream); }
-tbody td { padding:11px 12px; vertical-align:middle; }
-
-/* Badge */
-.badge { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; }
-.b-disp { background:rgba(46,93,58,.12); color:var(--green); }
-.b-usado { background:rgba(139,42,42,.12); color:var(--red); }
-.b-pend { background:rgba(201,168,76,.15); color:var(--gold-dark); }
-.b-m { background:rgba(26,74,139,.12); color:var(--blue); }
-.b-f { background:rgba(139,42,90,.12); color:var(--pink); }
-
-/* Dashboard cards */
-.dash-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:14px; margin-bottom:20px; }
-.dash-card { background:var(--white); border-radius:var(--radius-sm); box-shadow:var(--shadow); border:1px solid var(--cream-dark); padding:18px 16px; }
-.dash-num { font-family:'Cinzel',serif; font-size:32px; font-weight:600; color:var(--stone); line-height:1; margin-bottom:6px; }
-.dash-lbl { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--stone-muted); }
-.dash-card.c-green .dash-num { color:var(--green); }
-.dash-card.c-gold .dash-num { color:var(--gold-dark); }
-.dash-card.c-red .dash-num { color:var(--red); }
-.dash-card.c-blue .dash-num { color:var(--blue); }
-
-/* ID badge */
-.id-badge { font-family:monospace; font-size:12px; background:var(--cream); border:1px solid var(--cream-dark); border-radius:5px; padding:2px 7px; color:var(--stone-muted); }
-
-@media(max-width:400px){
-  .row2{grid-template-columns:1fr;}
-  .seq-item{font-size:8px;padding:6px 1px;}
-  .dash-grid{grid-template-columns:1fr 1fr;}
-}
+/* PAINEL */
+.painel-nav{background:var(--stone);display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.28);}
+.p-logo{font-family:'Cinzel',serif;color:var(--gold);font-size:17px;letter-spacing:2px;}
+.p-tabs{display:flex;gap:2px;}
+.p-tab{background:none;border:none;cursor:pointer;color:var(--stone-muted);padding:8px 12px;border-radius:7px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;transition:all .2s;}
+.p-tab:hover{color:var(--gold-light);}
+.p-tab.active{background:rgba(201,168,76,.18);color:var(--gold);}
+.p-view{display:none;}
+.p-view.active{display:block;}
+.p-wrap{padding:20px 16px;max-width:960px;margin:0 auto;}
+.cfg-box{background:rgba(201,168,76,.07);border:1.5px dashed var(--gold);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
+.cfg-box p{font-size:13px;color:var(--stone-light);margin-bottom:14px;line-height:1.5;}
+.gtoggle{display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--cream-dark);}
+.gtoggle-btn{flex:1;padding:12px;border:none;cursor:pointer;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;transition:all .2s;background:var(--cream);color:var(--stone-muted);}
+.gtoggle-btn.am{background:var(--blue);color:white;}
+.gtoggle-btn.af{background:var(--pink);color:white;}
+.chk-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.chk-item{display:flex;align-items:center;gap:7px;background:var(--cream);border:1.5px solid var(--cream-dark);border-radius:20px;padding:6px 13px;cursor:pointer;transition:all .2s;user-select:none;}
+.chk-item.on{background:rgba(46,93,58,.08);border-color:var(--green-light);}
+.chk-dot{width:9px;height:9px;border-radius:50%;background:var(--cream-dark);transition:background .2s;}
+.chk-item.on .chk-dot{background:var(--green-light);}
+.chk-item span{font-size:13px;font-weight:700;color:var(--stone-light);}
+.chk-item.on span{color:var(--green);}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px;}
+thead th{text-align:left;padding:10px 12px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--stone-muted);border-bottom:2px solid var(--cream-dark);}
+tbody tr{border-bottom:1px solid var(--cream-dark);}
+tbody tr:hover{background:var(--cream);}
+tbody td{padding:11px 12px;vertical-align:middle;}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.b-disp{background:rgba(46,93,58,.12);color:var(--green);}
+.b-usado{background:rgba(139,42,42,.12);color:var(--red);}
+.b-m{background:rgba(26,74,139,.12);color:var(--blue);}
+.b-f{background:rgba(139,42,90,.12);color:var(--pink);}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px;}
+.dash-card{background:var(--white);border-radius:var(--radius-sm);box-shadow:var(--shadow);border:1px solid var(--cream-dark);padding:18px 16px;}
+.dash-num{font-family:'Cinzel',serif;font-size:32px;font-weight:600;color:var(--stone);line-height:1;margin-bottom:6px;}
+.dash-lbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--stone-muted);}
+.dash-card.c-green .dash-num{color:var(--green);}
+.dash-card.c-gold .dash-num{color:var(--gold-dark);}
+.dash-card.c-red .dash-num{color:var(--red);}
+.dash-card.c-blue .dash-num{color:var(--blue);}
+.id-badge{font-family:monospace;font-size:12px;background:var(--cream);border:1px solid var(--cream-dark);border-radius:5px;padding:2px 7px;color:var(--stone-muted);}
+@media(max-width:400px){.row2{grid-template-columns:1fr;}.seq-item{font-size:8px;padding:6px 1px;}.dash-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════
-     TELA 1 — CADASTRO
-══════════════════════════════════════════════ -->
+<!-- ══ TELA 1: CADASTRO ══ -->
 <div id="s-cadastro" class="screen active">
   <div class="hero">
     <h1>Nomes para o Templo</h1>
@@ -228,13 +175,21 @@ tbody td { padding:11px 12px; vertical-align:middle; }
       <div class="row2">
         <div class="fg">
           <label>Data de Nascimento</label>
-          <input type="date" id="p-nasc">
+          <div class="cal-wrap">
+            <button type="button" class="cal-input empty" id="cal-btn" onclick="calToggle()">Selecione a data</button>
+            <input type="hidden" id="p-nasc">
+            <div class="cal-popup" id="cal-popup">
+              <div class="cal-header">
+                <button class="cal-nav" id="cal-prev" onclick="calNav(-1)">‹</button>
+                <span class="cal-month-year" id="cal-label" onclick="calToggleMode()"></span>
+                <button class="cal-nav" id="cal-next" onclick="calNav(1)">›</button>
+              </div>
+              <div id="cal-body"></div>
+            </div>
+          </div>
         </div>
         <div class="fg">
-          <label>
-            Nº de Ajuda
-            <span class="opt-label"> (opcional)</span>
-          </label>
+          <label>Nº de Ajuda <span class="opt-label">(opcional)</span></label>
           <input type="tel" id="p-ajuda" placeholder="123456">
         </div>
       </div>
@@ -257,34 +212,20 @@ tbody td { padding:11px 12px; vertical-align:middle; }
         <input type="tel" id="p-tel" placeholder="(11) 9 0000-0000" autocomplete="tel">
       </div>
     </div>
-
     <div class="card">
       <div class="card-title">Passo 2 — <span>Conta SUD</span></div>
       <p style="font-size:14px;color:var(--stone-muted);margin-bottom:16px;line-height:1.6;">
         Você possui uma <strong style="color:var(--stone)">conta SUD ativa</strong> com acesso ao FamilySearch?
       </p>
       <div class="sud-toggle">
-        <button class="sud-btn" id="btn-sim" onclick="escolherSUD('sim')">
-          ✓ Sim
-          <span class="sub">Tenho conta ativa<br>e acesso ao app</span>
-        </button>
-        <button class="sud-btn" id="btn-nao" onclick="escolherSUD('nao')">
-          ✕ Não
-          <span class="sub">Não possuo<br>ou sem acesso</span>
-        </button>
+        <button class="sud-btn" id="btn-sim" onclick="escolherSUD('sim')">✓ Sim<span class="sub">Tenho conta ativa<br>e acesso ao app</span></button>
+        <button class="sud-btn" id="btn-nao" onclick="escolherSUD('nao')">✕ Não<span class="sub">Não possuo<br>ou sem acesso</span></button>
       </div>
     </div>
-
-    <!-- link painel discreto no rodapé -->
-    <p style="text-align:center;margin-top:8px;">
-      <span onclick="irPainel()" style="font-size:12px;color:var(--stone-muted);cursor:pointer;text-decoration:underline;">Acesso Consultor</span>
-    </p>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     TELA 2 — COM CONTA (escolhe ordenança + link)
-══════════════════════════════════════════════ -->
+<!-- ══ TELA 2: COM CONTA ══ -->
 <div id="s-com-conta" class="screen">
   <div class="hero">
     <div class="hero-back" onclick="voltarCadastro()">← Voltar</div>
@@ -308,8 +249,6 @@ tbody td { padding:11px 12px; vertical-align:middle; }
       </div>
       <button class="btn btn-gold" style="margin-top:8px" onclick="buscarNome()">Buscar Nome →</button>
     </div>
-
-    <!-- resultado (oculto até buscar) -->
     <div id="resultado" style="display:none;">
       <div class="card">
         <div class="card-title">Passo 4 — <span>Seu Nome</span></div>
@@ -330,9 +269,7 @@ tbody td { padding:11px 12px; vertical-align:middle; }
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     TELA 3 — SEM CONTA
-══════════════════════════════════════════════ -->
+<!-- ══ TELA 3: SEM CONTA ══ -->
 <div id="s-sem-conta" class="screen">
   <div class="hero">
     <div class="hero-back" onclick="voltarCadastro()">← Voltar</div>
@@ -343,92 +280,28 @@ tbody td { padding:11px 12px; vertical-align:middle; }
     <div class="sem-box">
       <div class="icon">🛡</div>
       <h3>Tudo certo!</h3>
-      <p>
-        Seus dados foram registrados com sucesso.<br><br>
-        Um <strong>Consultor de História de Família</strong> entrará em contato pelo telefone informado para ajudá-lo pessoalmente com as ordenanças do templo.<br><br>
-        Fique à vontade para aproveitar o evento!
-      </p>
+      <p>Seus dados foram registrados com sucesso.<br><br>
+      Um <strong>Consultor de História de Família</strong> entrará em contato pelo telefone informado para ajudá-lo pessoalmente com as ordenanças do templo.<br><br>
+      Fique à vontade para aproveitar o evento!</p>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     PAINEL — CONSULTOR
-══════════════════════════════════════════════ -->
+<!-- ══ PAINEL CONSULTOR ══ -->
 <div id="s-painel" class="screen">
   <div class="painel-nav">
     <div class="p-logo">✦ THApp</div>
     <div class="p-tabs">
-      <button class="p-tab active" onclick="pNav('p-pendentes',this)">Pendentes</button>
-      <button class="p-tab" onclick="pNav('p-nomes',this)">Nomes</button>
+      <button class="p-tab active" onclick="pNav('p-nomes',this)">Nomes</button>
       <button class="p-tab" onclick="pNav('p-dash',this)">Dashboard</button>
       <button class="p-tab" onclick="pNav('p-cfg',this)">Config</button>
     </div>
   </div>
 
-  <!-- ABA: PENDENTES -->
-  <div id="p-pendentes" class="p-view active">
-    <div class="p-wrap">
-      <div id="alert-pend" class="alert"></div>
-      <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-          <span>Nomes <span>Pendentes de Indexação</span></span>
-          <button class="btn-outline" onclick="loadPendentes()">↻</button>
-        </div>
-        <div id="pend-list-wrap">
-          <p style="text-align:center;color:var(--stone-muted);padding:24px;font-size:13px;">Carregando...</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ABA: NOMES -->
-  <div id="p-nomes" class="p-view">
+  <!-- ABA NOMES -->
+  <div id="p-nomes" class="p-view active">
     <div class="p-wrap">
       <div id="alert-adm" class="alert"></div>
-      <div class="card">
-        <div class="card-title">Adicionar <span>Novo Nome</span></div>
-        <div class="fg">
-          <label>Link do Email FamilySearch</label>
-          <div style="display:flex;gap:8px;align-items:flex-start;">
-            <input type="url" id="adm-link-raw" placeholder="Cole aqui o link longo do email (email.msg.familysearch.org/...)" style="flex:1;">
-            <button class="btn-sm btn-dark" id="btn-resolver" onclick="resolverLink()" style="padding:13px 14px;white-space:nowrap;flex-shrink:0;">Resolver →</button>
-          </div>
-          <div id="link-status" style="display:none;margin-top:8px;padding:10px 13px;border-radius:8px;font-size:13px;"></div>
-          <input type="hidden" id="adm-link">
-        </div>
-        <div class="row2">
-          <div class="fg">
-            <label>Gênero</label>
-            <div class="gtoggle">
-              <button class="gtoggle-btn" id="adm-bm" onclick="admGen('M')">♂ Masc</button>
-              <button class="gtoggle-btn" id="adm-bf" onclick="admGen('F')">♀ Fem</button>
-            </div>
-          </div>
-          <div class="fg">
-            <label>Ordenança</label>
-            <select id="adm-ord">
-              <option value="">— Selecione —</option>
-              <option value="batismo">Batismo</option>
-              <option value="confirmacao">Confirmação</option>
-              <option value="iniciatorio">Iniciação</option>
-              <option value="investidura">Investidura</option>
-              <option value="selamento">Selamento</option>
-              <option value="casamento">Casamento</option>
-            </select>
-          </div>
-        </div>
-        <div class="fg">
-          <label>Ordenanças já concluídas</label>
-          <div class="chk-grid" id="adm-chk"></div>
-        </div>
-        <div class="fg"><label>Observação (opcional)</label><input type="text" id="adm-obs" placeholder="Nome do antepassado, data, etc."></div>
-        <div style="display:flex;gap:10px;margin-top:8px;">
-          <button class="btn-sm btn-dark" onclick="salvar()" style="padding:10px 20px;font-size:13px;">Salvar Nome</button>
-          <button class="btn-outline" onclick="limpar()">Limpar</button>
-        </div>
-      </div>
-
       <div class="card">
         <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
           <span>Nomes <span>Cadastrados</span></span>
@@ -443,57 +316,25 @@ tbody td { padding:11px 12px; vertical-align:middle; }
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>ID</th><th>Gên.</th><th>Ordenança</th><th>Concluídas</th><th>Status</th><th>Compartilhado com</th><th>Ala</th><th></th></tr></thead>
-            <tbody id="tb-nomes"><tr><td colspan="8" style="text-align:center;color:var(--stone-muted);padding:24px;">Configure o Supabase na aba Config</td></tr></tbody>
+            <thead><tr><th>FS ID</th><th>Gên.</th><th>Ordenança</th><th>Concluídas</th><th>Status</th><th>Compartilhado</th><th>Ala</th><th></th></tr></thead>
+            <tbody id="tb-nomes"><tr><td colspan="8" style="text-align:center;color:var(--stone-muted);padding:24px;">Carregando...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ABA: DASHBOARD -->
+  <!-- ABA DASHBOARD -->
   <div id="p-dash" class="p-view">
     <div class="p-wrap">
       <div class="dash-grid">
-        <div class="dash-card c-blue">
-          <div class="dash-num" id="d-total">—</div>
-          <div class="dash-lbl">Total de Nomes</div>
-        </div>
-        <div class="dash-card c-green">
-          <div class="dash-num" id="d-disp">—</div>
-          <div class="dash-lbl">Disponíveis</div>
-        </div>
-        <div class="dash-card c-red">
-          <div class="dash-num" id="d-usado">—</div>
-          <div class="dash-lbl">Usados</div>
-        </div>
-        <div class="dash-card c-gold">
-          <div class="dash-num" id="d-part">—</div>
-          <div class="dash-lbl">Participantes</div>
-        </div>
-        <div class="dash-card">
-          <div class="dash-num" id="d-sem">—</div>
-          <div class="dash-lbl">Sem Conta SUD</div>
-        </div>
-        <div class="dash-card c-green">
-          <div class="dash-num" id="d-com">—</div>
-          <div class="dash-lbl">Com Conta SUD</div>
-        </div>
+        <div class="dash-card c-blue"><div class="dash-num" id="d-total">—</div><div class="dash-lbl">Total</div></div>
+        <div class="dash-card c-green"><div class="dash-num" id="d-disp">—</div><div class="dash-lbl">Disponíveis</div></div>
+        <div class="dash-card c-red"><div class="dash-num" id="d-usado">—</div><div class="dash-lbl">Usados</div></div>
+        <div class="dash-card c-gold"><div class="dash-num" id="d-part">—</div><div class="dash-lbl">Participantes</div></div>
+        <div class="dash-card"><div class="dash-num" id="d-sem">—</div><div class="dash-lbl">Sem Conta SUD</div></div>
+        <div class="dash-card c-green"><div class="dash-num" id="d-com">—</div><div class="dash-lbl">Com Conta SUD</div></div>
       </div>
-
-      <div class="card">
-        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-          <span>Nomes <span>Compartilhados</span></span>
-          <button class="btn-outline" onclick="loadDash()">↻</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>ID</th><th>Gên.</th><th>Ordenança</th><th>Status</th><th>Compartilhado com</th><th>Ala</th><th>Data uso</th></tr></thead>
-            <tbody id="tb-dash"><tr><td colspan="7" style="text-align:center;color:var(--stone-muted);padding:24px;">Configure o Supabase na aba Config</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
       <div class="card">
         <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
           <span>Participantes <span>Cadastrados</span></span>
@@ -502,37 +343,26 @@ tbody td { padding:11px 12px; vertical-align:middle; }
         <div class="table-wrap">
           <table>
             <thead><tr><th>Nome</th><th>Ala</th><th>Tel</th><th>ContaSUD</th><th>Ordenança</th><th>Data</th></tr></thead>
-            <tbody id="tb-users"><tr><td colspan="6" style="text-align:center;color:var(--stone-muted);padding:24px;">Configure o Supabase na aba Config</td></tr></tbody>
+            <tbody id="tb-users"><tr><td colspan="6" style="text-align:center;color:var(--stone-muted);padding:24px;">Carregando...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ABA: CONFIG -->
+  <!-- ABA CONFIG -->
   <div id="p-cfg" class="p-view">
     <div class="p-wrap">
       <div class="card">
         <div class="card-title">Configuração <span>Supabase</span></div>
-        <p style="font-size:13px;color:var(--stone-muted);margin-bottom:16px;line-height:1.6;">
-          Cole as credenciais do seu projeto Supabase. As credenciais ficam salvas no navegador.
-        </p>
         <div class="fg"><label>URL do Projeto</label><input type="text" id="cfg-url" placeholder="https://xxxx.supabase.co"></div>
         <div class="fg"><label>Anon Key</label><input type="text" id="cfg-key" placeholder="eyJhbGci..."></div>
         <div style="display:flex;gap:10px;align-items:center;margin-top:8px;">
-          <button class="btn-sm btn-dark" onclick="conectar()" style="padding:10px 18px;font-size:13px;">Conectar Supabase</button>
+          <button class="btn-sm btn-dark" onclick="conectar()" style="padding:10px 18px;font-size:13px;">Conectar</button>
           <span id="cfg-st" style="font-size:13px;color:var(--stone-muted)"></span>
         </div>
         <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--cream-dark);">
-          <p style="font-size:13px;color:var(--stone-muted);margin-bottom:14px;line-height:1.5;">URL do <strong style="color:var(--stone)">Jarvis</strong> — para resolver automaticamente os links longos do email FamilySearch.</p>
-          <div class="fg"><label>URL do Jarvis</label><input type="text" id="cfg-jarvis" placeholder="https://felipeawolff.dpdns.org"></div>
-          <div style="display:flex;gap:10px;align-items:center;margin-top:8px;">
-            <button class="btn-sm btn-dark" onclick="salvarJarvis()" style="padding:10px 18px;font-size:13px;">Salvar URL Jarvis</button>
-            <span id="jarvis-st" style="font-size:13px;color:var(--stone-muted)"></span>
-          </div>
-        </div>
-        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--cream-dark);">
-          <p style="font-size:12px;color:var(--stone-muted);margin-bottom:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">SQL para criar as tabelas</p>
+          <p style="font-size:12px;color:var(--stone-muted);margin-bottom:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">SQL das tabelas</p>
           <pre style="background:var(--cream);border:1px solid var(--cream-dark);border-radius:9px;padding:16px;font-size:12px;overflow-x:auto;color:var(--stone-light);line-height:1.7;">CREATE TABLE nomes_templo (
   id BIGSERIAL PRIMARY KEY,
   link TEXT NOT NULL,
@@ -541,12 +371,12 @@ tbody td { padding:11px 12px; vertical-align:middle; }
   concluidas TEXT[] DEFAULT '{}',
   status TEXT DEFAULT 'disponivel',
   observacao TEXT,
+  fs_id TEXT,
   usado_por_nome TEXT,
   usado_por_ala TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   usado_em TIMESTAMPTZ
 );
-
 CREATE TABLE usuarios_templo (
   id BIGSERIAL PRIMARY KEY,
   nome_completo TEXT NOT NULL,
@@ -572,548 +402,362 @@ CREATE TABLE usuarios_templo (
 </div>
 
 <script>
-// ══════════════════════════════
-// DADOS
-// ══════════════════════════════
 const ORDS = ['batismo','confirmacao','iniciatorio','investidura','selamento','casamento'];
 const LBL  = {batismo:'Batismo',confirmacao:'Confirmação',iniciatorio:'Iniciação',investidura:'Investidura',selamento:'Selamento',casamento:'Casamento'};
 
-let sb = null;
-let admGenero='', admConc=[];
-let pubGen='', pubOrd='';
-let nomeId=null;
-// dados do usuário (guardados entre telas)
-let dadosUsuario = {};
+const SB_URL = 'https://dndeeyjmzppqxxoscmpc.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRuZGVleWptenBwcXh4b3NjbXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MzM1NzcsImV4cCI6MjA5NDIwOTU3N30.CTAC0t1T-oF_TuKZ5gUP-4wGRZF53UyAQDIol-Ij5GQ';
 
-// ══════════════════════════════
-// NAVEGAÇÃO ENTRE TELAS
-// ══════════════════════════════
+let sb = null;
+let pubGen='', pubOrd='', nomeId=null, dadosUsuario={};
+let admGenero='', admConc=[];
+
+// ── SUPABASE GLOBAL ──
+function initSB(url, key) {
+  try {
+    sb = window.supabase.createClient(url, key);
+    return true;
+  } catch(e) { return false; }
+}
+
+// ── NAVEGAÇÃO ──
 function irTela(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
-function voltarCadastro() { irTela('s-cadastro'); }
-function irPainel()       { irTela('s-painel'); loadPendentes(); }
-function irCadastro()     { irTela('s-cadastro'); }
+function voltarCadastro(){irTela('s-cadastro');}
+function irCadastro(){irTela('s-cadastro');}
 
-// ══════════════════════════════
-// TELA 1 — CADASTRO
-// ══════════════════════════════
+// Painel acessível por ?painel na URL
+function checkPainel() {
+  if (window.location.search.includes('painel')) {
+    irTela('s-painel');
+    loadNomes(); loadDash(); loadUsers();
+  }
+}
+
+// ══════════════════════
+// CALENDÁRIO CUSTOMIZADO
+// ══════════════════════
+let calDate = new Date();
+let calSelected = null;
+let calMode = 'day'; // 'day' | 'month' | 'year'
+let calYearStart = 0;
+
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DIAS  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+function calToggle() {
+  const popup = document.getElementById('cal-popup');
+  const btn   = document.getElementById('cal-btn');
+  const isOpen = popup.classList.contains('open');
+  if (isOpen) { popup.classList.remove('open'); btn.classList.remove('open'); }
+  else {
+    // Abre no modo dia, posicionado no ano de nascimento típico
+    calMode = 'day';
+    if (!calSelected) { calDate = new Date(1985, 0, 1); }
+    popup.classList.add('open'); btn.classList.add('open');
+    calRender();
+  }
+}
+
+function calClose() {
+  document.getElementById('cal-popup').classList.remove('open');
+  document.getElementById('cal-btn').classList.remove('open');
+}
+
+function calNav(dir) {
+  if (calMode === 'day') {
+    calDate.setMonth(calDate.getMonth() + dir);
+  } else if (calMode === 'month') {
+    calDate.setFullYear(calDate.getFullYear() + dir);
+  } else if (calMode === 'year') {
+    calYearStart += dir * 12;
+  }
+  calRender();
+}
+
+function calToggleMode() {
+  if (calMode === 'day') calMode = 'month';
+  else if (calMode === 'month') { calMode = 'year'; calYearStart = calDate.getFullYear() - 4; }
+  else calMode = 'day';
+  calRender();
+}
+
+function calRender() {
+  const label = document.getElementById('cal-label');
+  const body  = document.getElementById('cal-body');
+  const today = new Date();
+
+  if (calMode === 'day') {
+    label.textContent = MESES[calDate.getMonth()] + ' ' + calDate.getFullYear();
+    const firstDay = new Date(calDate.getFullYear(), calDate.getMonth(), 1).getDay();
+    const daysInMonth = new Date(calDate.getFullYear(), calDate.getMonth()+1, 0).getDate();
+    const daysInPrev  = new Date(calDate.getFullYear(), calDate.getMonth(), 0).getDate();
+
+    let html = '<div class="cal-weekdays">' + DIAS.map(d=>`<div class="cal-weekday">${d}</div>`).join('') + '</div>';
+    html += '<div class="cal-days">';
+    for (let i=0; i<firstDay; i++) {
+      const d = daysInPrev - firstDay + 1 + i;
+      html += `<div class="cal-day other-month">${d}</div>`;
+    }
+    for (let d=1; d<=daysInMonth; d++) {
+      let cls = 'cal-day';
+      const isToday = d===today.getDate() && calDate.getMonth()===today.getMonth() && calDate.getFullYear()===today.getFullYear();
+      const isSel   = calSelected && d===calSelected.getDate() && calDate.getMonth()===calSelected.getMonth() && calDate.getFullYear()===calSelected.getFullYear();
+      if (isToday) cls+=' today';
+      if (isSel)   cls+=' selected';
+      html += `<div class="${cls}" onclick="calSelectDay(${d})">${d}</div>`;
+    }
+    const total = firstDay + daysInMonth;
+    const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let i=1; i<=remaining; i++) html += `<div class="cal-day other-month">${i}</div>`;
+    html += '</div>';
+    body.innerHTML = html;
+
+  } else if (calMode === 'month') {
+    label.textContent = calDate.getFullYear();
+    let html = '<div class="cal-grid">';
+    MESES.forEach((m,i) => {
+      let cls='cal-cell';
+      if (i===today.getMonth() && calDate.getFullYear()===today.getFullYear()) cls+=' current';
+      if (calSelected && i===calSelected.getMonth() && calDate.getFullYear()===calSelected.getFullYear()) cls+=' selected';
+      html += `<div class="${cls}" onclick="calSelectMonth(${i})">${m.substring(0,3)}</div>`;
+    });
+    html += '</div>';
+    body.innerHTML = html;
+
+  } else if (calMode === 'year') {
+    const start = calYearStart;
+    label.textContent = start + ' — ' + (start+11);
+    let html = '<div class="cal-grid">';
+    for (let y=start; y<start+12; y++) {
+      let cls='cal-cell';
+      if (y===today.getFullYear()) cls+=' current';
+      if (calSelected && y===calSelected.getFullYear()) cls+=' selected';
+      html += `<div class="${cls}" onclick="calSelectYear(${y})">${y}</div>`;
+    }
+    html += '</div>';
+    body.innerHTML = html;
+  }
+}
+
+function calSelectDay(d) {
+  calSelected = new Date(calDate.getFullYear(), calDate.getMonth(), d);
+  const iso = calSelected.getFullYear()+'-'+String(calSelected.getMonth()+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  document.getElementById('p-nasc').value = iso;
+  const btn = document.getElementById('cal-btn');
+  btn.textContent = d+' de '+MESES[calSelected.getMonth()]+' de '+calSelected.getFullYear();
+  btn.classList.remove('empty');
+  calClose();
+}
+
+function calSelectMonth(m) {
+  calDate.setMonth(m);
+  calMode = 'day';
+  calRender();
+}
+
+function calSelectYear(y) {
+  calDate.setFullYear(y);
+  calMode = 'month';
+  calRender();
+}
+
+// Fecha calendário ao clicar fora
+document.addEventListener('click', function(e) {
+  const wrap = document.querySelector('.cal-wrap');
+  if (wrap && !wrap.contains(e.target)) calClose();
+});
+
+// ── TELA 1 ──
 function escolherSUD(v) {
   const nome = document.getElementById('p-nome').value.trim();
   const nasc = document.getElementById('p-nasc').value;
   const ala  = document.getElementById('p-ala').value;
   const tel  = document.getElementById('p-tel').value.trim();
-  if (!nome || !nasc || !ala || !tel) {
-    alerta('cad','err','Por favor, preencha Nome, Data de Nascimento, Ala e Telefone.');
-    return;
-  }
-  // guarda dados para usar nas próximas telas
+  if (!nome||!nasc||!ala||!tel) { alerta('cad','err','Preencha Nome, Data de Nascimento, Ala e Telefone.'); return; }
   dadosUsuario = {
-    nome_completo: nome,
-    data_nascimento: nasc,
-    numero_ajuda: document.getElementById('p-ajuda').value.trim() || null,
-    ala, telefone: tel,
-    tem_conta_sud: v === 'sim'
+    nome_completo:nome, data_nascimento:nasc,
+    numero_ajuda: document.getElementById('p-ajuda').value.trim()||null,
+    ala, telefone:tel, tem_conta_sud: v==='sim'
   };
-
-  // destaca botão escolhido brevemente
-  document.getElementById('btn-sim').className = 'sud-btn' + (v==='sim'?' sim':'');
-  document.getElementById('btn-nao').className = 'sud-btn' + (v==='nao'?' nao':'');
-
-  setTimeout(() => {
-    if (v === 'sim') {
-      irTela('s-com-conta');
-    } else {
-      salvarUsuario(dadosUsuario);
-      irTela('s-sem-conta');
-    }
-  }, 300);
+  document.getElementById('btn-sim').className='sud-btn'+(v==='sim'?' sim':'');
+  document.getElementById('btn-nao').className='sud-btn'+(v==='nao'?' nao':'');
+  setTimeout(()=>{
+    if (v==='sim') irTela('s-com-conta');
+    else { salvarUsuario(dadosUsuario); irTela('s-sem-conta'); }
+  },300);
 }
 
-// ══════════════════════════════
-// TELA 2 — COM CONTA
-// ══════════════════════════════
+// ── TELA 2 ──
 function buildOrdList() {
-  document.getElementById('ord-list').innerHTML = ORDS.map(o =>
-    `<button class="ord-btn" id="opb-${o}" onclick="selOrd('${o}')">
-      <div class="ord-dot"></div><span>${LBL[o]}</span>
-    </button>`
+  document.getElementById('ord-list').innerHTML = ORDS.map(o=>
+    `<button class="ord-btn" id="opb-${o}" onclick="selOrd('${o}')"><div class="ord-dot"></div><span>${LBL[o]}</span></button>`
   ).join('');
 }
 
 function setPubGen(g) {
-  pubGen = g;
-  document.getElementById('pg-m').className = 'toggle2-btn' + (g==='M'?' am':'');
-  document.getElementById('pg-f').className = 'toggle2-btn' + (g==='F'?' af':'');
+  pubGen=g;
+  document.getElementById('pg-m').className='toggle2-btn'+(g==='M'?' am':'');
+  document.getElementById('pg-f').className='toggle2-btn'+(g==='F'?' af':'');
 }
 
 function selOrd(o) {
-  pubOrd = o;
-  document.querySelectorAll('.ord-btn').forEach(b => b.classList.remove('active'));
+  pubOrd=o;
+  document.querySelectorAll('.ord-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('opb-'+o).classList.add('active');
 }
 
 async function buscarNome() {
-  if (!pubGen || !pubOrd) { alerta('cc','err','Selecione gênero e ordenança.'); return; }
-  if (!sb) { alerta('cc','inf','Sistema indisponível. Fale com o consultor.'); return; }
-
-  const {data, error} = await sb.from('nomes_templo')
-    .select('*').eq('genero', pubGen).eq('ordenanca', pubOrd)
-    .eq('status','disponivel').limit(1);
-
-  if (error || !data || !data.length) {
-    alerta('cc','err','Nenhum nome disponível para esta ordenança agora. Por favor, fale com o consultor.');
-    return;
-  }
-
-  const n = data[0];
-  nomeId = n.id;
-
-  // salva usuário com referência ao nome
-  const {data: uData} = await salvarUsuario({
-    ...dadosUsuario,
-    genero_escolhido: pubGen,
-    ordenanca_escolhida: pubOrd,
-    nome_id: nomeId
-  });
-
-  // atualiza nome com primeiro nome + ala do usuário
-  const primeiroNome = dadosUsuario.nome_completo.split(' ')[0];
-  await sb.from('nomes_templo').update({
-    usado_por_nome: primeiroNome,
-    usado_por_ala: dadosUsuario.ala
-  }).eq('id', nomeId);
-
-  // exibe resultado
-  document.getElementById('res-desc').textContent =
-    (pubGen==='M'?'♂ Masculino':'♀ Feminino') + ' · ' + LBL[pubOrd];
-  document.getElementById('res-link').href = n.link;
-  buildSeqBar(n.concluidas||[], pubOrd);
-  document.getElementById('resultado').style.display = 'block';
-  setTimeout(() => document.getElementById('resultado').scrollIntoView({behavior:'smooth', block:'start'}), 100);
+  if (!pubGen||!pubOrd){alerta('cc','err','Selecione gênero e ordenança.');return;}
+  if (!sb){alerta('cc','err','Sistema indisponível. Fale com o consultor.');return;}
+  const {data,error}=await sb.from('nomes_templo').select('*').eq('genero',pubGen).eq('ordenanca',pubOrd).eq('status','disponivel').limit(1);
+  if (error||!data||!data.length){alerta('cc','err','Nenhum nome disponível para esta ordenança agora. Fale com o consultor.');return;}
+  const n=data[0]; nomeId=n.id;
+  await salvarUsuario({...dadosUsuario,genero_escolhido:pubGen,ordenanca_escolhida:pubOrd,nome_id:nomeId});
+  const primeiro=dadosUsuario.nome_completo.split(' ')[0];
+  await sb.from('nomes_templo').update({usado_por_nome:primeiro,usado_por_ala:dadosUsuario.ala}).eq('id',nomeId);
+  document.getElementById('res-desc').textContent=(pubGen==='M'?'♂ Masculino':'♀ Feminino')+' · '+LBL[pubOrd];
+  document.getElementById('res-link').href=n.link;
+  buildSeqBar(n.concluidas||[],pubOrd);
+  document.getElementById('resultado').style.display='block';
+  setTimeout(()=>document.getElementById('resultado').scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 
-function buildSeqBar(conc, atual) {
-  document.getElementById('seq-bar').innerHTML = ORDS.map(o => {
-    const iO=ORDS.indexOf(o), iA=ORDS.indexOf(atual);
+function buildSeqBar(conc,atual) {
+  document.getElementById('seq-bar').innerHTML=ORDS.map(o=>{
+    const iO=ORDS.indexOf(o),iA=ORDS.indexOf(atual);
     let c='seq-item';
-    if (conc.includes(o)) c+=' done';
-    else if (o===atual) c+=' current';
-    else if (iO>iA) c+=' locked';
+    if(conc.includes(o))c+=' done';
+    else if(o===atual)c+=' current';
+    else if(iO>iA)c+=' locked';
     return `<div class="${c}">${LBL[o]}</div>`;
   }).join('');
 }
 
 async function marcarUsado() {
-  if (!nomeId || !sb) return;
-  await sb.from('nomes_templo').update({status:'usado', usado_em: new Date()}).eq('id', nomeId);
+  if(!nomeId||!sb)return;
+  await sb.from('nomes_templo').update({status:'usado',usado_em:new Date()}).eq('id',nomeId);
 }
 
-// ══════════════════════════════
-// SUPABASE — USUÁRIOS
-// ══════════════════════════════
+// ── USUÁRIO ──
 async function salvarUsuario(dados) {
-  if (!sb) return null;
-  const {data} = await sb.from('usuarios_templo').insert(dados).select().single();
+  if(!sb)return null;
+  const {data}=await sb.from('usuarios_templo').insert(dados).select().single();
   return data;
 }
 
-// ══════════════════════════════
-// SUPABASE — CONEXÃO
-// ══════════════════════════════
+// ── PAINEL ──
+function pNav(v,el) {
+  document.querySelectorAll('.p-view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.p-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById(v).classList.add('active');
+  el.classList.add('active');
+  if(v==='p-dash'){loadDash();loadUsers();}
+  if(v==='p-nomes')loadNomes();
+}
+
 function conectar() {
-  const url = document.getElementById('cfg-url').value.trim();
-  const key = document.getElementById('cfg-key').value.trim();
-  if (!url || !key) { document.getElementById('cfg-st').textContent='⚠ Preencha os campos'; return; }
-  try {
-    sb = window.supabase.createClient(url, key);
+  const url=document.getElementById('cfg-url').value.trim();
+  const key=document.getElementById('cfg-key').value.trim();
+  if(!url||!key){document.getElementById('cfg-st').textContent='⚠ Preencha os campos';return;}
+  if(initSB(url,key)){
     document.getElementById('cfg-st').textContent='✓ Conectado!';
     document.getElementById('cfg-st').style.color='var(--green)';
-    localStorage.setItem('sb_url', url);
-    localStorage.setItem('sb_key', key);
+    localStorage.setItem('sb_url',url); localStorage.setItem('sb_key',key);
     loadNomes(); loadDash(); loadUsers();
-  } catch(e) {
-    document.getElementById('cfg-st').textContent='✗ '+e.message;
   }
 }
 
-// ══════════════════════════════
-// PAINEL — NOMES
-// ══════════════════════════════
-function buildChk() {
-  document.getElementById('adm-chk').innerHTML = ORDS.map(o =>
-    `<div class="chk-item" id="chk-${o}" onclick="togChk('${o}')">
-      <div class="chk-dot"></div><span>${LBL[o]}</span>
-    </div>`
-  ).join('');
-}
-
-function togChk(o) {
-  const el=document.getElementById('chk-'+o), i=admConc.indexOf(o);
-  if(i===-1){admConc.push(o);el.classList.add('on');}
-  else{admConc.splice(i,1);el.classList.remove('on');}
-}
-
-function admGen(g) {
-  admGenero=g;
-  document.getElementById('adm-bm').className='gtoggle-btn'+(g==='M'?' am':'');
-  document.getElementById('adm-bf').className='gtoggle-btn'+(g==='F'?' af':'');
-}
-
-async function salvar() {
-  if (!sb) { alerta('adm','err','Configure o Supabase na aba Config.'); return; }
-  const link=document.getElementById('adm-link').value.trim();
-  const ord=document.getElementById('adm-ord').value;
-  const obs=document.getElementById('adm-obs').value.trim();
-  if (!link||!admGenero||!ord) { alerta('adm','err','Preencha link, gênero e ordenança.'); return; }
-  const {error}=await sb.from('nomes_templo').insert({
-    link, genero:admGenero, ordenanca:ord, concluidas:admConc, observacao:obs, status:'disponivel'
-  });
-  if (error) { alerta('adm','err','Erro: '+error.message); return; }
-  alerta('adm','ok','Nome salvo com sucesso!');
-  limpar(); loadNomes();
-}
-
-function limpar() {
-  document.getElementById('adm-link').value='';
-  document.getElementById('adm-ord').value='';
-  document.getElementById('adm-obs').value='';
-  admGenero=''; admConc=[];
-  document.getElementById('adm-bm').className='gtoggle-btn';
-  document.getElementById('adm-bf').className='gtoggle-btn';
-  document.querySelectorAll('.chk-item').forEach(e=>e.classList.remove('on'));
-}
-
 async function loadNomes() {
-  if (!sb) return;
+  if(!sb)return;
   const flt=document.getElementById('flt-st').value;
   let q=sb.from('nomes_templo').select('*').order('created_at',{ascending:false});
-  if(flt) q=q.eq('status',flt);
-  const {data}=await q;
-  if(!data) return;
+  if(flt)q=q.eq('status',flt);
+  const{data}=await q;
+  if(!data)return;
   const tb=document.getElementById('tb-nomes');
-  if(!data.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--stone-muted);padding:24px;">Nenhum nome cadastrado</td></tr>';return;}
+  if(!data.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--stone-muted);padding:20px;">Nenhum nome</td></tr>';return;}
   tb.innerHTML=data.map(n=>{
     const conc=(n.concluidas||[]).map(o=>`<span class="badge" style="background:rgba(46,93,58,.08);color:var(--green);font-size:10px;margin:1px">${LBL[o]||o}</span>`).join('');
-    const comQuem = n.usado_por_nome
-      ? `<strong>${n.usado_por_nome}</strong>`
-      : '<span style="color:var(--stone-muted)">—</span>';
-    const alaUso = n.usado_por_ala || '—';
+    const dt=n.created_at?new Date(n.created_at).toLocaleDateString('pt-BR'):'-';
     return `<tr>
-      <td><span class="id-badge">#${n.id}</span></td>
+      <td><span class="id-badge">${n.fs_id||('#'+n.id)}</span></td>
       <td><span class="badge ${n.genero==='M'?'b-m':'b-f'}">${n.genero==='M'?'♂':'♀'}</span></td>
       <td><strong>${LBL[n.ordenanca]||n.ordenanca}</strong></td>
       <td>${conc||'—'}</td>
       <td><span class="badge ${n.status==='disponivel'?'b-disp':'b-usado'}">${n.status==='disponivel'?'Disponível':'Usado'}</span></td>
-      <td>${comQuem}</td>
-      <td style="font-size:12px;color:var(--stone-muted)">${alaUso}</td>
-      <td style="white-space:nowrap">
-        ${n.status==='disponivel'?`<button class="btn-sm btn-red" onclick="usarAdm(${n.id})">Usado</button> `:''}
-        <button class="btn-sm" style="background:rgba(61,53,40,.08);color:var(--stone-muted)" onclick="del(${n.id})">✕</button>
-      </td>
+      <td>${n.usado_por_nome?`<strong>${n.usado_por_nome}</strong>`:'—'}</td>
+      <td style="font-size:12px;color:var(--stone-muted)">${n.usado_por_ala||'—'}</td>
+      <td><button class="btn-sm" style="background:rgba(61,53,40,.08);color:var(--stone-muted)" onclick="del(${n.id})">✕</button></td>
     </tr>`;
   }).join('');
 }
 
-async function usarAdm(id) {
-  await sb.from('nomes_templo').update({status:'usado',usado_em:new Date()}).eq('id',id);
-  loadNomes(); loadDash();
-}
 async function del(id) {
-  if(!confirm('Excluir este nome?')) return;
+  if(!confirm('Excluir este nome?'))return;
   await sb.from('nomes_templo').delete().eq('id',id);
-  loadNomes(); loadDash();
+  loadNomes();loadDash();
 }
 
-// ══════════════════════════════
-// PAINEL — DASHBOARD
-// ══════════════════════════════
 async function loadDash() {
-  if (!sb) return;
-  const [{data:nomes},{data:users}] = await Promise.all([
+  if(!sb)return;
+  const [{data:nomes},{data:users}]=await Promise.all([
     sb.from('nomes_templo').select('*'),
     sb.from('usuarios_templo').select('*')
   ]);
-  if (nomes) {
-    document.getElementById('d-total').textContent = nomes.length;
-    document.getElementById('d-disp').textContent  = nomes.filter(n=>n.status==='disponivel').length;
-    document.getElementById('d-usado').textContent = nomes.filter(n=>n.status==='usado').length;
+  if(nomes){
+    document.getElementById('d-total').textContent=nomes.length;
+    document.getElementById('d-disp').textContent=nomes.filter(n=>n.status==='disponivel').length;
+    document.getElementById('d-usado').textContent=nomes.filter(n=>n.status==='usado').length;
   }
-  if (users) {
-    document.getElementById('d-part').textContent = users.length;
-    document.getElementById('d-sem').textContent  = users.filter(u=>!u.tem_conta_sud).length;
-    document.getElementById('d-com').textContent  = users.filter(u=>u.tem_conta_sud).length;
+  if(users){
+    document.getElementById('d-part').textContent=users.length;
+    document.getElementById('d-sem').textContent=users.filter(u=>!u.tem_conta_sud).length;
+    document.getElementById('d-com').textContent=users.filter(u=>u.tem_conta_sud).length;
   }
-
-  // tabela nomes compartilhados (todos, foco no usado_por)
-  const tb=document.getElementById('tb-dash');
-  if (!nomes||!nomes.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--stone-muted);padding:20px;">Nenhum nome</td></tr>';return;}
-  const ordered=[...nomes].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-  tb.innerHTML=ordered.map(n=>{
-    const dt = n.usado_em ? new Date(n.usado_em).toLocaleDateString('pt-BR') : '—';
-    return `<tr>
-      <td><span class="id-badge">#${n.id}</span></td>
-      <td><span class="badge ${n.genero==='M'?'b-m':'b-f'}">${n.genero==='M'?'♂':'♀'}</span></td>
-      <td>${LBL[n.ordenanca]||n.ordenanca}</td>
-      <td><span class="badge ${n.status==='disponivel'?'b-disp':'b-usado'}">${n.status==='disponivel'?'Disponível':'Usado'}</span></td>
-      <td>${n.usado_por_nome?`<strong>${n.usado_por_nome}</strong>`:'<span style="color:var(--stone-muted)">Aguardando</span>'}</td>
-      <td style="font-size:12px;color:var(--stone-muted)">${n.usado_por_ala||'—'}</td>
-      <td style="font-size:12px;color:var(--stone-muted)">${dt}</td>
-    </tr>`;
-  }).join('');
 }
 
 async function loadUsers() {
-  if (!sb) return;
-  const {data}=await sb.from('usuarios_templo').select('*').order('created_at',{ascending:false});
-  if(!data) return;
+  if(!sb)return;
+  const{data}=await sb.from('usuarios_templo').select('*').order('created_at',{ascending:false});
+  if(!data)return;
   const tb=document.getElementById('tb-users');
   if(!data.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--stone-muted);padding:20px;">Nenhum participante</td></tr>';return;}
   tb.innerHTML=data.map(u=>`<tr>
     <td><strong>${u.nome_completo}</strong></td>
     <td>${u.ala||'—'}</td>
     <td>${u.telefone||'—'}</td>
-    <td>${u.tem_conta_sud?'<span class="badge b-disp">✓ Sim</span>':'<span class="badge b-pend">✕ Não</span>'}</td>
+    <td>${u.tem_conta_sud?'<span class="badge b-disp">✓ Sim</span>':'<span class="badge" style="background:rgba(61,53,40,.08);color:var(--stone-muted)">✕ Não</span>'}</td>
     <td>${LBL[u.ordenanca_escolhida]||u.ordenanca_escolhida||'—'}</td>
     <td style="font-size:12px;color:var(--stone-muted)">${u.created_at?new Date(u.created_at).toLocaleDateString('pt-BR'):'-'}</td>
   </tr>`).join('');
 }
 
-// ══════════════════════════════
-// NAV PAINEL
-// ══════════════════════════════
-function pNav(v, el) {
-  document.querySelectorAll('.p-view').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.p-tab').forEach(x=>x.classList.remove('active'));
-  document.getElementById(v).classList.add('active');
-  el.classList.add('active');
-  if(v==='p-dash')      loadDash();
-  if(v==='p-nomes')     loadNomes();
-  if(v==='p-pendentes') loadPendentes();
-}
+function copiarSQL(){navigator.clipboard.writeText(document.querySelector('pre').textContent).then(()=>alert('SQL copiado!'));}
 
-// ══════════════════════════════
-// PAINEL — PENDENTES
-// ══════════════════════════════
-let _pendGeneros = {};   // { nomeid: 'M'|'F' }
-let _pendConc    = {};   // { nomeid: string[] }
-
-function _pendLinkResumido(link) {
-  try {
-    const u = new URL(link);
-    const id = u.searchParams.get('id') || '';
-    return id ? '...?id=' + id.substring(0, 12) + '…' : u.hostname + '/…';
-  } catch { return link.substring(0, 40) + '…'; }
-}
-
-async function loadPendentes() {
-  const wrap = document.getElementById('pend-list-wrap');
-  if (!sb) {
-    wrap.innerHTML = '<p style="text-align:center;color:var(--stone-muted);padding:24px;font-size:13px;">Configure o Supabase na aba Config.</p>';
-    return;
-  }
-  wrap.innerHTML = '<p style="text-align:center;color:var(--stone-muted);padding:20px;font-size:13px;">Carregando…</p>';
-
-  const {data, error} = await sb
-    .from('nomes_templo')
-    .select('id, link, created_at, observacao')
-    .eq('status', 'pendente_indexacao')
-    .order('created_at', {ascending: true});
-
-  if (error) {
-    wrap.innerHTML = '<p style="text-align:center;color:var(--red);padding:20px;font-size:13px;">Erro: ' + error.message + '</p>';
-    return;
-  }
-  if (!data || !data.length) {
-    wrap.innerHTML = '<p style="text-align:center;color:var(--stone-muted);padding:24px;font-size:13px;">Nenhum nome pendente de indexação.</p>';
-    return;
-  }
-
-  wrap.innerHTML = '<div class="pend-list">' + data.map(n => {
-    const dt = new Date(n.created_at).toLocaleDateString('pt-BR') + ' ' +
-               new Date(n.created_at).toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
-    const linkRes = _pendLinkResumido(n.link);
-    return `
-      <div class="pend-item" id="pend-${n.id}">
-        <div class="pend-meta">
-          <span class="id-badge">#${n.id}</span>
-          <span class="pend-link" title="${n.link}">${linkRes}</span>
-          <span class="pend-date">${dt}</span>
-          <button class="btn-sm btn-dark" onclick="abrirFormPend(${n.id})" style="padding:6px 12px;">Indexar</button>
-        </div>
-        <div class="pend-form" id="pform-${n.id}">
-          <label style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--stone-light);margin-bottom:6px;display:block;">Gênero</label>
-          <div class="pend-gtoggle" style="margin-bottom:12px;">
-            <button class="pend-gbtn" id="pgm-${n.id}" onclick="setPendGen(${n.id},'M')">♂ Masc</button>
-            <button class="pend-gbtn" id="pgf-${n.id}" onclick="setPendGen(${n.id},'F')">♀ Fem</button>
-          </div>
-          <label style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--stone-light);margin-bottom:6px;display:block;">Ordenança</label>
-          <select id="pord-${n.id}" style="width:100%;margin-bottom:12px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);padding:11px 14px;font-family:'Lato',sans-serif;font-size:14px;color:var(--stone);background:var(--cream);outline:none;appearance:none;">
-            <option value="">— Selecione —</option>
-            ${ORDS.map(o=>`<option value="${o}">${LBL[o]}</option>`).join('')}
-          </select>
-          <label style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--stone-light);margin-bottom:6px;display:block;">Ordenanças já concluídas</label>
-          <div class="pend-chk-grid" style="margin-bottom:12px;">
-            ${ORDS.map(o=>`
-              <div class="pend-chk-item" id="pchk-${n.id}-${o}" onclick="togPendChk(${n.id},'${o}')">
-                <div class="chk-dot"></div><span>${LBL[o]}</span>
-              </div>`).join('')}
-          </div>
-          <label style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--stone-light);margin-bottom:6px;display:block;">Observação <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label>
-          <input type="text" id="pobs-${n.id}" placeholder="Nome do antepassado, data…"
-            style="width:100%;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);padding:11px 14px;font-family:'Lato',sans-serif;font-size:14px;color:var(--stone);background:var(--cream);outline:none;margin-bottom:12px;">
-          <div style="display:flex;gap:8px;">
-            <button class="btn-sm btn-dark" onclick="confirmarIndexacao(${n.id})" style="padding:9px 18px;font-size:13px;">✓ Confirmar</button>
-            <button class="btn-outline" onclick="fecharFormPend(${n.id})">Cancelar</button>
-          </div>
-        </div>
-      </div>`;
-  }).join('') + '</div>';
-}
-
-function abrirFormPend(id) {
-  document.getElementById('pend-'+id).classList.add('indexando');
-  document.getElementById('pform-'+id).classList.add('open');
-  if (!_pendGeneros[id]) _pendGeneros[id] = '';
-  if (!_pendConc[id])    _pendConc[id]    = [];
-}
-
-function fecharFormPend(id) {
-  document.getElementById('pend-'+id).classList.remove('indexando');
-  document.getElementById('pform-'+id).classList.remove('open');
-}
-
-function setPendGen(id, g) {
-  _pendGeneros[id] = g;
-  document.getElementById('pgm-'+id).className = 'pend-gbtn' + (g==='M'?' am':'');
-  document.getElementById('pgf-'+id).className = 'pend-gbtn' + (g==='F'?' af':'');
-}
-
-function togPendChk(id, ord) {
-  if (!_pendConc[id]) _pendConc[id] = [];
-  const el  = document.getElementById('pchk-'+id+'-'+ord);
-  const idx = _pendConc[id].indexOf(ord);
-  if (idx === -1) { _pendConc[id].push(ord); el.classList.add('on'); }
-  else            { _pendConc[id].splice(idx,1); el.classList.remove('on'); }
-}
-
-async function confirmarIndexacao(id) {
-  const genero   = _pendGeneros[id] || '';
-  const ordenanca = document.getElementById('pord-'+id).value;
-  const concluidas = _pendConc[id] || [];
-  const observacao = document.getElementById('pobs-'+id).value.trim();
-
-  if (!genero || !ordenanca) {
-    alerta('pend','err','Selecione gênero e ordenança antes de confirmar.');
-    return;
-  }
-
-  const {error} = await sb.from('nomes_templo').update({
-    genero, ordenanca, concluidas,
-    observacao: observacao || null,
-    status: 'disponivel'
-  }).eq('id', id);
-
-  if (error) { alerta('pend','err','Erro ao indexar: '+error.message); return; }
-
-  alerta('pend','ok','Nome #'+id+' indexado com sucesso!');
-  loadPendentes();
-  loadDash();
-}
-
-// ══════════════════════════════
-// UTILS
-// ══════════════════════════════
-function alerta(ctx, type, msg) {
+function alerta(ctx,type,msg){
   const e=document.getElementById('alert-'+ctx);
-  e.className='alert show alert-'+type;
-  e.textContent=msg;
+  e.className='alert show alert-'+type;e.textContent=msg;
   setTimeout(()=>e.classList.remove('show'),5000);
 }
 
-function copiarSQL() {
-  const sql = document.querySelector('pre').textContent;
-  navigator.clipboard.writeText(sql).then(()=>alert('SQL copiado!'));
-}
-
-// ══════════════════════════════
-// RESOLVER LINK JARVIS
-// ══════════════════════════════
-async function resolverLink() {
-  const urlRaw = document.getElementById('adm-link-raw').value.trim();
-  if (!urlRaw) { mostrarLinkStatus('err', 'Cole o link do email primeiro.'); return; }
-
-  const jarvisUrl = localStorage.getItem('jarvis_url');
-  if (!jarvisUrl) { mostrarLinkStatus('err', 'Configure a URL do Jarvis na aba Config.'); return; }
-
-  const btn = document.getElementById('btn-resolver');
-  btn.textContent = '...'; btn.disabled = true;
-
-  try {
-    const res = await fetch(jarvisUrl + '/api/thapp/resolve-link', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({url: urlRaw})
-    });
-
-    if (!res.ok) throw new Error('Erro HTTP ' + res.status);
-    const data = await res.json();
-
-    if (data.sucesso) {
-      document.getElementById('adm-link').value = data.url_final;
-      mostrarLinkStatus('ok', '✓ Link resolvido: ' + data.url_final);
-    } else {
-      mostrarLinkStatus('err', '✗ ' + data.mensagem);
-    }
-  } catch(e) {
-    mostrarLinkStatus('err', '✗ Não foi possível conectar ao Jarvis. Verifique se está online.');
-  } finally {
-    btn.textContent = 'Resolver →'; btn.disabled = false;
-  }
-}
-
-function mostrarLinkStatus(tipo, msg) {
-  const el = document.getElementById('link-status');
-  el.style.display = 'block';
-  el.style.background = tipo === 'ok' ? 'rgba(46,93,58,0.1)' : 'rgba(139,42,42,0.1)';
-  el.style.color = tipo === 'ok' ? 'var(--green)' : 'var(--red)';
-  el.style.border = tipo === 'ok' ? '1px solid rgba(46,93,58,0.2)' : '1px solid rgba(139,42,42,0.2)';
-  el.textContent = msg;
-}
-
-function salvarJarvis() {
-  const url = document.getElementById('cfg-jarvis').value.trim().replace(/\/$/, '');
-  if (!url) { document.getElementById('jarvis-st').textContent = '⚠ Preencha a URL'; return; }
-  localStorage.setItem('jarvis_url', url);
-  document.getElementById('jarvis-st').textContent = '✓ Salvo!';
-  document.getElementById('jarvis-st').style.color = 'var(--green)';
-}
-
-// ══════════════════════════════
-// INIT
-// ══════════════════════════════
-buildChk();
+// ── INIT ──
 buildOrdList();
 
-// Credenciais padrão do projeto THApp
-const DEFAULT_SB_URL = 'https://dndeeyjmzppqxxoscmpc.supabase.co';
-const DEFAULT_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRuZGVleWptenBwcXh4b3NjbXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MzM1NzcsImV4cCI6MjA5NDIwOTU3N30.CTAC0t1T-oF_TuKZ5gUP-4wGRZF53UyAQDIol-Ij5GQ';
+// Conecta Supabase automaticamente com credenciais padrão
+const su=localStorage.getItem('sb_url')||SB_URL;
+const sk=localStorage.getItem('sb_key')||SB_KEY;
+document.getElementById('cfg-url').value=su;
+document.getElementById('cfg-key').value=sk;
+initSB(su,sk);
+document.getElementById('cfg-st').textContent='✓ Conectado!';
+document.getElementById('cfg-st').style.color='var(--green)';
 
-const su = localStorage.getItem('sb_url') || DEFAULT_SB_URL;
-const sk = localStorage.getItem('sb_key') || DEFAULT_SB_KEY;
-document.getElementById('cfg-url').value = su;
-document.getElementById('cfg-key').value = sk;
-// conecta automaticamente
-try {
-  sb = window.supabase.createClient(su, sk);
-  document.getElementById('cfg-st').textContent = '✓ Conectado!';
-  document.getElementById('cfg-st').style.color = 'var(--green)';
-} catch(e) {}
-
-const sj=localStorage.getItem('jarvis_url');
-if(sj) document.getElementById('cfg-jarvis').value=sj;
+// Verifica se deve abrir painel
+checkPainel();
 </script>
 </body>
 </html>
