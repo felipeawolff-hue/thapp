@@ -178,6 +178,13 @@ tbody td{padding:11px 12px;vertical-align:middle;}
           <div class="cal-wrap">
             <button type="button" class="cal-input empty" id="cal-btn" onclick="calToggle()">Selecione a data</button>
             <input type="hidden" id="p-nasc">
+            <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+              <input type="text" id="p-nasc-manual" placeholder="DD/MM/AAAA" maxlength="10"
+                style="flex:1;font-size:14px;padding:10px 12px;"
+                oninput="calManualInput(this.value)"
+                autocomplete="bday">
+              <span style="font-size:11px;color:var(--stone-muted);white-space:nowrap;">ou digite</span>
+            </div>
             <div class="cal-popup" id="cal-popup">
               <div class="cal-header">
                 <button class="cal-nav" id="cal-prev" onclick="calNav(-1)">‹</button>
@@ -550,6 +557,9 @@ function calSelectDay(d) {
   const btn = document.getElementById('cal-btn');
   btn.textContent = d+' de '+MESES[calSelected.getMonth()]+' de '+calSelected.getFullYear();
   btn.classList.remove('empty');
+  // Sincroniza campo manual
+  const manual = document.getElementById('p-nasc-manual');
+  if (manual) manual.value = String(d).padStart(2,'0')+'/'+String(calSelected.getMonth()+1).padStart(2,'0')+'/'+calSelected.getFullYear();
   calClose();
 }
 
@@ -593,8 +603,16 @@ function escolherSUD(v) {
 
 // ── TELA 2 ──
 function buildOrdList() {
-  document.getElementById('ord-list').innerHTML = ORDS.map(o=>
-    `<button class="ord-btn" id="opb-${o}" onclick="selOrd('${o}')"><div class="ord-dot"></div><span>${LBL[o]}</span></button>`
+  // B e C aparecem como um único botão para o usuário
+  const itens = [
+    { id: 'confirmacao', label: 'Batismo e Confirmação' },
+    { id: 'iniciatoria',  label: 'Iniciatória' },
+    { id: 'investidura',  label: 'Investidura' },
+    { id: 'selamento',    label: 'Selamento' },
+    { id: 'casamento',    label: 'Casamento' },
+  ];
+  document.getElementById('ord-list').innerHTML = itens.map(o=>
+    `<button class="ord-btn" id="opb-${o.id}" onclick="selOrd('${o.id}')"><div class="ord-dot"></div><span>${o.label}</span></button>`
   ).join('');
 }
 
@@ -742,6 +760,32 @@ function alerta(ctx,type,msg){
   const e=document.getElementById('alert-'+ctx);
   e.className='alert show alert-'+type;e.textContent=msg;
   setTimeout(()=>e.classList.remove('show'),5000);
+}
+
+// ── ENTRADA MANUAL DE DATA ──
+function calManualInput(val) {
+  // Formata automaticamente DD/MM/AAAA
+  val = val.replace(/\D/g, '');
+  if (val.length > 2) val = val.slice(0,2) + '/' + val.slice(2);
+  if (val.length > 5) val = val.slice(0,5) + '/' + val.slice(5);
+  document.getElementById('p-nasc-manual').value = val;
+
+  // Valida e aplica quando completo
+  if (val.length === 10) {
+    const parts = val.split('/');
+    const d = parseInt(parts[0]), m = parseInt(parts[1]), y = parseInt(parts[2]);
+    if (d>=1&&d<=31&&m>=1&&m<=12&&y>=1900&&y<=new Date().getFullYear()) {
+      const iso = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      document.getElementById('p-nasc').value = iso;
+      // Atualiza o botão do calendário
+      const btn = document.getElementById('cal-btn');
+      btn.textContent = val;
+      btn.classList.remove('empty');
+      // Sincroniza o calendário
+      calSelected = new Date(y, m-1, d);
+      calDate = new Date(y, m-1, d);
+    }
+  }
 }
 
 // ── INIT ──
